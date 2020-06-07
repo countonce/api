@@ -240,8 +240,22 @@
                   <li>
                     <a href="#send-a-ping" class="toc-h2 toc-link" data-title="Send a ping">Send a ping</a>
                   </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#queries" class="toc-h1 toc-link" data-title="Queries">Queries</a>
+              <ul class="toc-list-h2">
                   <li>
-                    <a href="#queries" class="toc-h2 toc-link" data-title="Queries">Queries</a>
+                    <a href="#uniques" class="toc-h2 toc-link" data-title="Uniques">Uniques</a>
+                  </li>
+                  <li>
+                    <a href="#counts" class="toc-h2 toc-link" data-title="Counts">Counts</a>
+                  </li>
+                  <li>
+                    <a href="#revenue" class="toc-h2 toc-link" data-title="Revenue">Revenue</a>
+                  </li>
+                  <li>
+                    <a href="#combined" class="toc-h2 toc-link" data-title="Combined">Combined</a>
                   </li>
               </ul>
           </li>
@@ -396,7 +410,7 @@ You must replace <code>auth_token</code> with your API auth token.
 <aside class="warning">
 Pings may fail with an error if constraints are in place.
 </aside>
-<h2 id='queries'>Queries</h2><h3 id='uniques'>Uniques</h3><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">import</span> <span class="nx">CountOnce</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">countonce-node</span><span class="dl">'</span><span class="p">;</span>
+<h1 id='queries'>Queries</h1><h2 id='uniques'>Uniques</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">import</span> <span class="nx">CountOnce</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">countonce-node</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">countOnce</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CountOnce</span><span class="p">({</span>
     <span class="na">account_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;account_id&gt;</span><span class="dl">'</span><span class="p">,</span>
@@ -505,8 +519,491 @@ Pings may fail with an error if constraints are in place.
   </span><span class="nl">"next_iterator"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p>The <code>uniques</code> endpoint retrieves the number of unique ping values seen over time.</p>
+<p>The <code>uniques</code> endpoint returns the number of unique ping values seen over time.</p>
 <h3 id='url-parameters'>URL Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Mandatory</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>key</td>
+<td>Yes</td>
+<td>The name of the key</td>
+</tr>
+<tr>
+<td>metric</td>
+<td>No</td>
+<td>The metric to slice the date range. Valid options: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code> and <code>annually</code>.</td>
+</tr>
+</tbody></table>
+
+<aside class="success">
+Note that the values under <code>range</code> will vary depending on the <code>metric</code> requested.
+</aside>
+<h2 id='counts'>Counts</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">import</span> <span class="nx">CountOnce</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">countonce-node</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">countOnce</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CountOnce</span><span class="p">({</span>
+    <span class="na">account_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;account_id&gt;</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">auth_token</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;your api auth token&gt;</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">queryOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">metric</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;metric&gt;</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">filter</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">account_id</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1001</span><span class="dl">'</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">countOnce</span><span class="p">.</span><span class="nx">getCounts</span><span class="p">(</span><span class="dl">'</span><span class="s1">&lt;key&gt;</span><span class="dl">'</span><span class="p">,</span> <span class="nx">queryOptions</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">item</span> <span class="k">in</span> <span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">attributes</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">metric</span> <span class="k">in</span> <span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">counts</span><span class="p">.</span><span class="nx">range</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`- </span><span class="p">${</span><span class="nx">metric</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">counts</span><span class="p">.</span><span class="nx">range</span><span class="p">[</span><span class="nx">metric</span><span class="p">]}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">err</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">));</span>
+</code></pre></div><div class="highlight"><pre class="highlight php tab-php"><code><span class="cp">&lt;?php</span>
+<span class="kn">use</span> <span class="nn">CountOnce\CountOnce</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">Psr\Http\Message\ResponseInterface</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">GuzzleHttp\Exception\RequestException</span><span class="p">;</span>
+
+<span class="nv">$countOnce</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CountOnce</span><span class="p">([</span>
+    <span class="s1">'account_id'</span> <span class="o">=&gt;</span> <span class="s1">'account1'</span><span class="p">,</span>
+    <span class="s1">'auth_token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;your api auth token&gt;'</span>
+<span class="p">]);</span>
+
+<span class="nv">$promise</span> <span class="o">=</span> <span class="nv">$countOnce</span><span class="o">-&gt;</span><span class="na">getCounts</span><span class="p">(</span><span class="s1">'&lt;key&gt;'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">'metric'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;metric&gt;'</span><span class="p">,</span>
+    <span class="s1">'filter'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'account_id'</span> <span class="o">=&gt;</span> <span class="mi">1001</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">]);</span>
+
+<span class="nv">$promise</span><span class="o">-&gt;</span><span class="na">then</span><span class="p">(</span>
+    <span class="k">function</span><span class="p">(</span><span class="nx">ResponseInterface</span> <span class="nv">$res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$result</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$res</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getContents</span><span class="p">());</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">items</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nb">print_r</span><span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">attributes</span><span class="p">);</span>
+            <span class="k">foreach</span><span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">counts</span><span class="o">-&gt;</span><span class="na">range</span> <span class="k">as</span> <span class="nv">$metric</span> <span class="o">=&gt;</span> <span class="nv">$count</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">echo</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">'- %s: %s'</span><span class="p">,</span> <span class="nv">$metric</span><span class="p">,</span> <span class="nv">$count</span><span class="p">)</span> <span class="o">.</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="k">function</span><span class="p">(</span><span class="nx">RequestException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="na">getMessage</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="c1">// Wait for response before continuing</span>
+<span class="nv">$promise</span><span class="o">-&gt;</span><span class="na">wait</span><span class="p">();</span>
+</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s1">'http://&lt;account_id&gt;.countapi.localhost:8000/counts/&lt;key&gt;/&lt;metric&gt;'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;auth_token&gt;'</span> <span class="se">\</span>
+  <span class="nt">-G</span>
+</code></pre></div>
+<blockquote>
+<p>For scalar keys, the JSON response looks as follows:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"2020-06-01"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-02"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-03"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-04"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-05"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-06"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-07"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"current"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"previous"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<blockquote>
+<p>For composite keys, the JSON response looks as follows:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"account_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1001"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"login"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"2020-06-01"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-02"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-03"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-04"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-05"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-06"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-07"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"current"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"previous"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"next_iterator"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>The <code>uniques</code> endpoint returns the number of unique ping values seen over time.</p>
+<h3 id='url-parameters-2'>URL Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Mandatory</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>key</td>
+<td>Yes</td>
+<td>The name of the key</td>
+</tr>
+<tr>
+<td>metric</td>
+<td>No</td>
+<td>The metric to slice the date range. Valid options: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code> and <code>annually</code>.</td>
+</tr>
+</tbody></table>
+
+<aside class="success">
+Note that the values under <code>range</code> will vary depending on the <code>metric</code> requested.
+</aside>
+<h2 id='revenue'>Revenue</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">import</span> <span class="nx">CountOnce</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">countonce-node</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">countOnce</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CountOnce</span><span class="p">({</span>
+    <span class="na">account_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;account_id&gt;</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">auth_token</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;your api auth token&gt;</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">queryOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">metric</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;metric&gt;</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">filter</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">account_id</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1001</span><span class="dl">'</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">countOnce</span><span class="p">.</span><span class="nx">getRevenue</span><span class="p">(</span><span class="dl">'</span><span class="s1">&lt;key&gt;</span><span class="dl">'</span><span class="p">,</span> <span class="nx">queryOptions</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">item</span> <span class="k">in</span> <span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">attributes</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">metric</span> <span class="k">in</span> <span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">revenue</span><span class="p">.</span><span class="nx">range</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`- </span><span class="p">${</span><span class="nx">metric</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">revenue</span><span class="p">.</span><span class="nx">range</span><span class="p">[</span><span class="nx">metric</span><span class="p">]}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">err</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">));</span>
+</code></pre></div><div class="highlight"><pre class="highlight php tab-php"><code><span class="cp">&lt;?php</span>
+<span class="kn">use</span> <span class="nn">CountOnce\CountOnce</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">Psr\Http\Message\ResponseInterface</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">GuzzleHttp\Exception\RequestException</span><span class="p">;</span>
+
+<span class="nv">$countOnce</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CountOnce</span><span class="p">([</span>
+    <span class="s1">'account_id'</span> <span class="o">=&gt;</span> <span class="s1">'account1'</span><span class="p">,</span>
+    <span class="s1">'auth_token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;your api auth token&gt;'</span>
+<span class="p">]);</span>
+
+<span class="nv">$promise</span> <span class="o">=</span> <span class="nv">$countOnce</span><span class="o">-&gt;</span><span class="na">getRevenue</span><span class="p">(</span><span class="s1">'&lt;key&gt;'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">'metric'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;metric&gt;'</span><span class="p">,</span>
+    <span class="s1">'filter'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'account_id'</span> <span class="o">=&gt;</span> <span class="mi">1001</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">]);</span>
+
+<span class="nv">$promise</span><span class="o">-&gt;</span><span class="na">then</span><span class="p">(</span>
+    <span class="k">function</span><span class="p">(</span><span class="nx">ResponseInterface</span> <span class="nv">$res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$result</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$res</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getContents</span><span class="p">());</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">items</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nb">print_r</span><span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">attributes</span><span class="p">);</span>
+            <span class="k">foreach</span><span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">revenue</span><span class="o">-&gt;</span><span class="na">range</span> <span class="k">as</span> <span class="nv">$metric</span> <span class="o">=&gt;</span> <span class="nv">$count</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">echo</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">'- %s: %s'</span><span class="p">,</span> <span class="nv">$metric</span><span class="p">,</span> <span class="nv">$count</span><span class="p">)</span> <span class="o">.</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="k">function</span><span class="p">(</span><span class="nx">RequestException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="na">getMessage</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="c1">// Wait for response before continuing</span>
+<span class="nv">$promise</span><span class="o">-&gt;</span><span class="na">wait</span><span class="p">();</span>
+</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s1">'http://&lt;account_id&gt;.countapi.localhost:8000/revenue/&lt;key&gt;/&lt;metric&gt;'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;auth_token&gt;'</span> <span class="se">\</span>
+  <span class="nt">-G</span>
+</code></pre></div>
+<blockquote>
+<p>For scalar keys, the JSON response looks as follows:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"2020-06-01"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-02"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-03"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-04"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-05"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-06"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"2020-06-07"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"opening"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"current"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"previous"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<blockquote>
+<p>For composite keys, the JSON response looks as follows:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"account_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1001"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"login"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"2020-06-01"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-02"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-03"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-04"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-05"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-06"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"2020-06-07"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"opening"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"current"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"previous"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"next_iterator"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>The <code>revenue</code> endpoint returns the delta of revenue seen over time. The <code>opening</code> property indicates the <em>opening balance</em> at the beginning of the period.</p>
+<h3 id='url-parameters-3'>URL Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Mandatory</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>key</td>
+<td>Yes</td>
+<td>The name of the key</td>
+</tr>
+<tr>
+<td>metric</td>
+<td>No</td>
+<td>The metric to slice the date range. Valid options: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code> and <code>annually</code>.</td>
+</tr>
+</tbody></table>
+
+<aside class="success">
+Note that the values under <code>range</code> will vary depending on the <code>metric</code> requested.
+</aside>
+<h2 id='combined'>Combined</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">import</span> <span class="nx">CountOnce</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">countonce-node</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">countOnce</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CountOnce</span><span class="p">({</span>
+    <span class="na">account_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;account_id&gt;</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">auth_token</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;your api auth token&gt;</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">queryOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">metric</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;metric&gt;</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">filter</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">account_id</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1001</span><span class="dl">'</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">countOnce</span><span class="p">.</span><span class="nx">getCombined</span><span class="p">(</span><span class="dl">'</span><span class="s1">&lt;key&gt;</span><span class="dl">'</span><span class="p">,</span> <span class="nx">queryOptions</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">item</span> <span class="k">in</span> <span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">attributes</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">metric</span> <span class="k">in</span> <span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">combined</span><span class="p">.</span><span class="nx">range</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`- </span><span class="p">${</span><span class="nx">metric</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">item</span><span class="p">].</span><span class="nx">revenue</span><span class="p">.</span><span class="nx">range</span><span class="p">[</span><span class="nx">metric</span><span class="p">]}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">err</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">));</span>
+</code></pre></div><div class="highlight"><pre class="highlight php tab-php"><code><span class="cp">&lt;?php</span>
+<span class="kn">use</span> <span class="nn">CountOnce\CountOnce</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">Psr\Http\Message\ResponseInterface</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">GuzzleHttp\Exception\RequestException</span><span class="p">;</span>
+
+<span class="nv">$countOnce</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CountOnce</span><span class="p">([</span>
+    <span class="s1">'account_id'</span> <span class="o">=&gt;</span> <span class="s1">'account1'</span><span class="p">,</span>
+    <span class="s1">'auth_token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;your api auth token&gt;'</span>
+<span class="p">]);</span>
+
+<span class="nv">$promise</span> <span class="o">=</span> <span class="nv">$countOnce</span><span class="o">-&gt;</span><span class="na">getCombined</span><span class="p">(</span><span class="s1">'&lt;key&gt;'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">'metric'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;metric&gt;'</span><span class="p">,</span>
+    <span class="s1">'filter'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'account_id'</span> <span class="o">=&gt;</span> <span class="mi">1001</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">]);</span>
+
+<span class="nv">$promise</span><span class="o">-&gt;</span><span class="na">then</span><span class="p">(</span>
+    <span class="k">function</span><span class="p">(</span><span class="nx">ResponseInterface</span> <span class="nv">$res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$result</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$res</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getContents</span><span class="p">());</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">items</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nb">print_r</span><span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">attributes</span><span class="p">);</span>
+            <span class="k">foreach</span><span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">combined</span><span class="o">-&gt;</span><span class="na">range</span> <span class="k">as</span> <span class="nv">$metric</span> <span class="o">=&gt;</span> <span class="nv">$count</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">echo</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">'- %s: %s'</span><span class="p">,</span> <span class="nv">$metric</span><span class="p">,</span> <span class="nv">$count</span><span class="p">)</span> <span class="o">.</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="k">function</span><span class="p">(</span><span class="nx">RequestException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="na">getMessage</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="c1">// Wait for response before continuing</span>
+<span class="nv">$promise</span><span class="o">-&gt;</span><span class="na">wait</span><span class="p">();</span>
+</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s1">'http://&lt;account_id&gt;.countapi.localhost:8000/combined/&lt;key&gt;/&lt;metric&gt;'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;auth_token&gt;'</span> <span class="se">\</span>
+  <span class="nt">-G</span>
+</code></pre></div>
+<blockquote>
+<p>For scalar keys, the JSON response looks as follows:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"combined"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"2020-06-01"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"2020-06-02"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"2020-06-03"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"2020-06-04"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"2020-06-05"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"2020-06-06"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"2020-06-07"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"opening"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.11</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"current"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"previous"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.11</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.11</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<blockquote>
+<p>For composite keys, the JSON response looks as follows:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"account_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1001"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"login"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"combined"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"2020-06-01"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"2020-06-02"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"2020-06-03"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"2020-06-04"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"2020-06-05"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"2020-06-06"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"2020-06-07"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"opening"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"current"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"previous"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"uniques"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"counts"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"revenue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"next_iterator"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>The <code>combined</code> endpoint returns the a combination of <code>uniques</code>, <code>counts</code> and <code>revenue</code> seen over time. The <code>opening</code> property indicates the <em>opening balance</em> for <code>revenue</code> at the beginning of the period.</p>
+<h3 id='url-parameters-4'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
