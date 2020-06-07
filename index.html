@@ -538,6 +538,41 @@ Pings may fail with an error if constraints are in place.
 <td>No</td>
 <td>The metric to slice the date range. Valid options: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code> and <code>annually</code>.</td>
 </tr>
+<tr>
+<td>range</td>
+<td>No</td>
+<td>One of <code>last7days</code>, <code>last14days</code>, <code>last30days</code>, <code>today</code>, <code>thismonth</code> or <code>lastmonth</code>.</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>No</td>
+<td>The start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>No</td>
+<td>The end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_range</td>
+<td>No</td>
+<td>One of <code>prev7days</code>, <code>prev14days</code>, <code>prev30days</code>, <code>yesterday</code>, <code>prevmonthtodate</code> or <code>prevmonth</code>.</td>
+</tr>
+<tr>
+<td>prev_start_date</td>
+<td>No</td>
+<td>The previous start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_end_date</td>
+<td>No</td>
+<td>The previous end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>include</td>
+<td>No</td>
+<td>Optional features to include in a comma-delimited list. Values are <code>current</code> (total for current period), <code>previous</code> (total for previous period), <code>total</code> (total for all time) and <code>prev_range</code> (sliced data by metric for the previous period).</td>
+</tr>
 </tbody></table>
 
 <aside class="success">
@@ -670,6 +705,41 @@ Note that the values under <code>range</code> will vary depending on the <code>m
 <td>metric</td>
 <td>No</td>
 <td>The metric to slice the date range. Valid options: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code> and <code>annually</code>.</td>
+</tr>
+<tr>
+<td>range</td>
+<td>No</td>
+<td>One of <code>last7days</code>, <code>last14days</code>, <code>last30days</code>, <code>today</code>, <code>thismonth</code> or <code>lastmonth</code>.</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>No</td>
+<td>The start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>No</td>
+<td>The end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_range</td>
+<td>No</td>
+<td>One of <code>prev7days</code>, <code>prev14days</code>, <code>prev30days</code>, <code>yesterday</code>, <code>prevmonthtodate</code> or <code>prevmonth</code>.</td>
+</tr>
+<tr>
+<td>prev_start_date</td>
+<td>No</td>
+<td>The previous start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_end_date</td>
+<td>No</td>
+<td>The previous end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>include</td>
+<td>No</td>
+<td>Optional features to include in a comma-delimited list. Values are <code>current</code> (total for current period), <code>previous</code> (total for previous period), <code>total</code> (total for all time) and <code>prev_range</code> (sliced data by metric for the previous period).</td>
 </tr>
 </tbody></table>
 
@@ -805,6 +875,41 @@ Note that the values under <code>range</code> will vary depending on the <code>m
 <td>metric</td>
 <td>No</td>
 <td>The metric to slice the date range. Valid options: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code> and <code>annually</code>.</td>
+</tr>
+<tr>
+<td>range</td>
+<td>No</td>
+<td>One of <code>last7days</code>, <code>last14days</code>, <code>last30days</code>, <code>today</code>, <code>thismonth</code> or <code>lastmonth</code>.</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>No</td>
+<td>The start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>No</td>
+<td>The end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_range</td>
+<td>No</td>
+<td>One of <code>prev7days</code>, <code>prev14days</code>, <code>prev30days</code>, <code>yesterday</code>, <code>prevmonthtodate</code> or <code>prevmonth</code>.</td>
+</tr>
+<tr>
+<td>prev_start_date</td>
+<td>No</td>
+<td>The previous start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_end_date</td>
+<td>No</td>
+<td>The previous end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>include</td>
+<td>No</td>
+<td>Optional features to include in a comma-delimited list. Values are <code>current</code> (total for current period), <code>previous</code> (total for previous period), <code>total</code> (total for all time) and <code>prev_range</code> (sliced data by metric for the previous period).</td>
 </tr>
 </tbody></table>
 
@@ -1020,6 +1125,41 @@ Note that the values under <code>range</code> will vary depending on the <code>m
 <td>metric</td>
 <td>No</td>
 <td>The metric to slice the date range. Valid options: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>quarterly</code> and <code>annually</code>.</td>
+</tr>
+<tr>
+<td>range</td>
+<td>No</td>
+<td>One of <code>last7days</code>, <code>last14days</code>, <code>last30days</code>, <code>today</code>, <code>thismonth</code> or <code>lastmonth</code>.</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>No</td>
+<td>The start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>No</td>
+<td>The end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_range</td>
+<td>No</td>
+<td>One of <code>prev7days</code>, <code>prev14days</code>, <code>prev30days</code>, <code>yesterday</code>, <code>prevmonthtodate</code> or <code>prevmonth</code>.</td>
+</tr>
+<tr>
+<td>prev_start_date</td>
+<td>No</td>
+<td>The previous start date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>prev_end_date</td>
+<td>No</td>
+<td>The previous end date, if no range is set. Format YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>include</td>
+<td>No</td>
+<td>Optional features to include in a comma-delimited list. Values are <code>current</code> (total for current period), <code>previous</code> (total for previous period), <code>total</code> (total for all time) and <code>prev_range</code> (sliced data by metric for the previous period).</td>
 </tr>
 </tbody></table>
 
